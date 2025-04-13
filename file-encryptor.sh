@@ -61,9 +61,6 @@ if [[ -z $operation ]]; then
 elif [[ $operation == "-h" || $operation == "--help" ]]; then
     displayUsage
 elif [[ $operation == "-e" || $operation == "--encrypt" ]]; then
-    secret=$(openssl rand -hex 16)
-    iv=$(openssl rand -hex 16)
-
     if [[ -z $filename ]]; then
         echo -e "$error no file specified."
         displayUsage
@@ -87,9 +84,12 @@ elif [[ $operation == "-e" || $operation == "--encrypt" ]]; then
         exit 1
     fi
 
+    secret=$(openssl rand -hex 16)
+    iv=$(openssl rand -hex 16)
+
     $(openssl enc -aes-128-ctr -in "$filename" -out ".$filename.enc" -K "$secret" -iv "$iv")  # Encrypt the file
     echo "$secret" | gpg --encrypt --recipient "$id" --armor > ".secret.gpg" # Encrypt the AES key
-    echo "$iv" | gpg --encrypt --recipient "$id" --armor > ".iv.gpg" # Encrypt the IV used in file encryption
+    echo "$iv" | gpg --encrypt --recipient "$id" --armor > ".iv.gpg" # Encrypt the IV
     cat ".secret.gpg" ".iv.gpg" ".$filename.enc" > ".$filename-enc"   # Combine encrypted key, IV, and file
     $(gpg --yes --sign --armor --output "$filename.enc" ".$filename-enc")  # Generate an attched digital signature file
     rm .*".gpg" ".$filename"*    # Delete temporary files
