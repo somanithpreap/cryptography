@@ -91,7 +91,7 @@ elif [[ $operation == "-e" || $operation == "--encrypt" ]]; then
     echo "$secret" | gpg --encrypt --recipient "$id" --armor > ".secret.gpg" # Encrypt the AES key
     echo "$iv" | gpg --encrypt --recipient "$id" --armor > ".iv.gpg" # Encrypt the IV
     cat ".secret.gpg" ".iv.gpg" ".$filename.enc" > ".$filename-enc"   # Combine encrypted key, IV, and file
-    gpg --yes --sign --armor --output "$filename.enc" ".$filename-enc"  # Generate an attched digital signature file
+    gpg --yes --sign --output "$filename.enc" ".$filename-enc"  # Generate an attched digital signature file
     rm .*".gpg" ".$filename"*    # Delete temporary files
 
     echo -e "  \e[0;32mEncrypted file:\e[0m \e[1m$filename.enc\e[0m\n"
@@ -99,7 +99,7 @@ elif [[ $operation == "-d" || $operation == "--decrypt" ]]; then
     if [[ -z $filename ]]; then
         echo -e "$error no file specified."
         displayUsage
-        exit 1
+        exit 1R
     elif [[ !(-e $filename) ]]; then
         echo -e "$error file \"$filename\" not found."
         displayUsage
