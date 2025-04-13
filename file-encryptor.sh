@@ -87,11 +87,11 @@ elif [[ $operation == "-e" || $operation == "--encrypt" ]]; then
     secret=$(openssl rand -hex 16)
     iv=$(openssl rand -hex 16)
 
-    $(openssl enc -aes-128-ctr -in "$filename" -out ".$filename.enc" -K "$secret" -iv "$iv")  # Encrypt the file
+    openssl enc -aes-128-ctr -in "$filename" -out ".$filename.enc" -K "$secret" -iv "$iv"  # Encrypt the file
     echo "$secret" | gpg --encrypt --recipient "$id" --armor > ".secret.gpg" # Encrypt the AES key
     echo "$iv" | gpg --encrypt --recipient "$id" --armor > ".iv.gpg" # Encrypt the IV
     cat ".secret.gpg" ".iv.gpg" ".$filename.enc" > ".$filename-enc"   # Combine encrypted key, IV, and file
-    $(gpg --yes --sign --armor --output "$filename.enc" ".$filename-enc")  # Generate an attched digital signature file
+    gpg --yes --sign --armor --output "$filename.enc" ".$filename-enc"  # Generate an attched digital signature file
     rm .*".gpg" ".$filename"*    # Delete temporary files
 
     echo -e "  \e[0;32mEncrypted file:\e[0m \e[1m$filename.enc\e[0m\n"
