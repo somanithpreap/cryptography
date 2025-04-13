@@ -66,7 +66,7 @@ elif [[ $operation == "-e" || $operation == "--encrypt" ]]; then
         displayUsage
         exit 1
     elif [[ -e $filename ]]; then  # Check if file exists
-        # Check for -k option
+        # Check for -id option
         if [[ -z $idOption ]]; then
             echo -e "$error expected option \"-id\"."
             displayUsage
