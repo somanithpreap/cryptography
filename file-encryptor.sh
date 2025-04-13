@@ -99,7 +99,7 @@ elif [[ $operation == "-d" || $operation == "--decrypt" ]]; then
     if [[ -z $filename ]]; then
         echo -e "$error no file specified."
         displayUsage
-        exit 1R
+        exit 1
     elif [[ !(-e $filename) ]]; then
         echo -e "$error file \"$filename\" not found."
         displayUsage
